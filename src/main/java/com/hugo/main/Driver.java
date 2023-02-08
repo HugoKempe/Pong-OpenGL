@@ -5,6 +5,11 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 import java.nio.ByteBuffer;
+
+import com.hugo.input.KeyboardInput;
+import com.hugo.input.MouseInput;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
+import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 
 public class Driver
@@ -12,6 +17,9 @@ public class Driver
     public boolean running = false;
     public int width = 800, height = 600;
     public long window;
+
+    private GLFWKeyCallback keyCallback;
+    private GLFWCursorPosCallback cursorCallback;
 
     public void init()
     {
@@ -31,6 +39,9 @@ public class Driver
             System.err.println("Could not create our window!");
         }
 
+        glfwSetKeyCallback(window, keyCallback = new KeyboardInput());
+        glfwSetCursorPosCallback(window, cursorCallback = new MouseInput());
+
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
         glfwSetWindowPos(window, 100, 100);
@@ -48,6 +59,10 @@ public class Driver
     public void update()
     {
         glfwPollEvents();
+        if (KeyboardInput.isKeyDown(GLFW_KEY_SPACE))
+        {
+            System.out.println("Space");
+        }
     }
 
     public void run()
